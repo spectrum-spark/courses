@@ -2,101 +2,101 @@
   {
     "objectID": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html",
     "href": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html",
-    "title": "Fitting models in R",
+    "title": "Modelling an oubtreak - COVID-19 in Thailand",
     "section": "",
     "text": "Thanks to Lisa White, and Ben Cooper, Nuffield Department of Medicine, Oxford University and\nMichael Meehan, Australian Institute of Tropical Health & Medicine, James Cook University.\nAdapted and presented by Emma McBryde, Australian Institute of Tropical Health & Medicine, James Cook University\nJuly 2022",
     "crumbs": [
-      "Fitting models in R"
+      "Modelling an oubtreak - COVID-19 in Thailand"
     ]
   },
   {
     "objectID": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#code-summary",
     "href": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#code-summary",
-    "title": "Fitting models in R",
+    "title": "Modelling an oubtreak - COVID-19 in Thailand",
     "section": "Code summary",
     "text": "Code summary\nIt is good practice to write a short description of your code to summarise its purpose for future users. Below is an example of such a description. Open R studio, create a new file and copy and paste the code chunk below into your editor to start writing your own code:\n# SPARK Modelling Short course\n# 2023 Infectious Diseases Modelling\n\n#########################################\n## Modelling Thailand's COVID outbreak ##\n#########################################\nSave this file in your student_materials folder, and give it a meaningful name, like session_seir_ode_covid.",
     "crumbs": [
-      "Fitting models in R"
+      "Modelling an oubtreak - COVID-19 in Thailand"
     ]
   },
   {
     "objectID": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#library-loading-and-importing-data",
     "href": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#library-loading-and-importing-data",
-    "title": "Fitting models in R",
+    "title": "Modelling an oubtreak - COVID-19 in Thailand",
     "section": "Library loading and importing data",
     "text": "Library loading and importing data\nWe’ll need three libraries for this session:\n\nlibrary(dplyr)\nlibrary(deSolve)\nlibrary(ggplot2)\n\nand some data\n\nfirst_wave &lt;- read.csv(\"first_wave_TH.csv\", colClasses = c(\"Date\", \"numeric\", \"numeric\"))\n# Convert dates\nfirst_wave$Date &lt;- as.Date(first_wave$Date, format = \"%Y-%m-%d\")\n\nsummary(first_wave)\n\n      Date                Cases        Cumulative_cases\n Min.   :2020-01-01   Min.   :  0.00   Min.   :   0    \n 1st Qu.:2020-02-15   1st Qu.:  0.00   1st Qu.:  34    \n Median :2020-03-31   Median :  2.00   Median :1711    \n Mean   :2020-03-31   Mean   : 17.42   Mean   :1535    \n 3rd Qu.:2020-05-15   3rd Qu.: 11.00   3rd Qu.:3025    \n Max.   :2020-06-30   Max.   :188.00   Max.   :3171",
     "crumbs": [
-      "Fitting models in R"
+      "Modelling an oubtreak - COVID-19 in Thailand"
     ]
   },
   {
     "objectID": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#define-the-model-parameters",
     "href": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#define-the-model-parameters",
-    "title": "Fitting models in R",
+    "title": "Modelling an oubtreak - COVID-19 in Thailand",
     "section": "Define the model parameters",
     "text": "Define the model parameters\nAll our parameters have to go in a single structure, either a vector or a list. Today, we’ll use a named vector\n\nparameters &lt;- c(\n    R0 = 4,\n    latent_period = 5,\n    infectious_period = 6\n)\n\nThe parameters for the model are frequently estimated either from literature or from the data given the model and other parameters of the model (stay tuned for more on this). The flows are often represented by some Greek symbols, but it is often better to have more meaningful names as we have done here.\nComplete the following table using information about the natural history of COVID-19 infection:\n\n\n\n\n\n\n\n\n\nParameter\nFlow transformation\nValue/Range\nUnits\n\n\n\n\nBasic reproduction number\n\n\n\n\n\nLatent period\n\n\n\n\n\nDuration of infection\n\n\n\n\n\nDuration of immunity\n\n\n\n\n\n\nType parameters in your console. What do you see?\n\nType `parameters[“R0”] into your console. What does this value mean?",
     "crumbs": [
-      "Fitting models in R"
+      "Modelling an oubtreak - COVID-19 in Thailand"
     ]
   },
   {
     "objectID": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#set-up-the-initial-conditions-and-model-variables",
     "href": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#set-up-the-initial-conditions-and-model-variables",
-    "title": "Fitting models in R",
+    "title": "Modelling an oubtreak - COVID-19 in Thailand",
     "section": "Set up the initial conditions and model variables",
     "text": "Set up the initial conditions and model variables\nCopy and paste the chunk below into your script to continue model development:\n\n# Initial conditions\nTotal_population &lt;- 6.6e7\nInitial_exposed &lt;- 0\nInitial_infected &lt;- 20\nInitial_recovered &lt;- 0\nInitial_susceptible &lt;- Total_population - Initial_exposed - Initial_infected - Initial_recovered\n\n# State variables\nstate &lt;- c(\n    Susceptible = Initial_susceptible,\n    Exposed = Initial_exposed,\n    Infectious = Initial_infected,\n    Recovered = Initial_recovered\n)\n\nWe also need to define the start and end time for the model simulation:\n\n# Time window\nstart_date &lt;- as.Date(\"2020-03-07\")\nend_date &lt;- as.Date(\"2020-03-26\")\ntimes &lt;- seq(start_date, end_date, by = 1)",
     "crumbs": [
-      "Fitting models in R"
+      "Modelling an oubtreak - COVID-19 in Thailand"
     ]
   },
   {
     "objectID": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#setting-up-the-function-to-solve-equations",
     "href": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#setting-up-the-function-to-solve-equations",
-    "title": "Fitting models in R",
+    "title": "Modelling an oubtreak - COVID-19 in Thailand",
     "section": "Setting up the function to solve equations",
     "text": "Setting up the function to solve equations\nJust as we did for session 2, we can write functions to evaluate our system of equations, which we will need to use for the ODE solver. The SEIR model we’re going to use here is more complicated than we’ve seen, but work through it slowly and make sure it all makes sense.\n\n# Model function\nCOVID.base &lt;- function(t, state, parameters) {\n    with(as.list(c(state, parameters)), {\n        # Calculate the total population size\n        Total_population &lt;- Susceptible + Exposed + Infectious + Recovered\n\n        # Calculate the average force of infection imposed on each susceptible individual\n        force_of_infection &lt;- R0 * Infectious / (Total_population * infectious_period)\n\n        # Calculate the net (instantaneous) change in each state variable\n        Susceptible_change &lt;- -force_of_infection * Susceptible\n        Exposed_change &lt;- force_of_infection * Susceptible - Exposed / latent_period\n        Infectious_change &lt;- Exposed / latent_period - Infectious / infectious_period\n        Recovered_change &lt;- Infectious / infectious_period\n\n        # Return net changes as list\n        return(list(\n            c(\n                Susceptible_change,\n                Exposed_change,\n                Infectious_change,\n                Recovered_change\n            )\n        ))\n    })\n}\n\nWhat is the name of our function and what are the inputs and outputs?\n\nWhat is the rate of movement out of state E?\n\nWhat is the rate of movement out of state I?\n\nWhat is the formula for \\(\\lambda\\), known as the force of infection?\n\nExplain the different components of the force of infection.",
     "crumbs": [
-      "Fitting models in R"
+      "Modelling an oubtreak - COVID-19 in Thailand"
     ]
   },
   {
     "objectID": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#run-and-plot-the-model",
     "href": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#run-and-plot-the-model",
-    "title": "Fitting models in R",
+    "title": "Modelling an oubtreak - COVID-19 in Thailand",
     "section": "Run and plot the model",
     "text": "Run and plot the model\nCopy the following chunk into your script to solve the ODE\n\n# Solve model\nout &lt;- ode(y = state, times = as.numeric(times - times[1]), func = COVID.base, parms = parameters)\n# Plot solution\npar(mar = c(1, 1, 1, 1)) # reduce the margins of the plot in order to fit it in the panel\nplot(out)\n\n\n\n\n\n\n\n\nExplain how each of the variables S, E, I and R can be measured in the field.\n\nDefine incidence and prevalence, and discuss the differences between them.",
     "crumbs": [
-      "Fitting models in R"
+      "Modelling an oubtreak - COVID-19 in Thailand"
     ]
   },
   {
     "objectID": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#post-process-the-model-output-to-predict-standard-epidemiological-metrics",
     "href": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#post-process-the-model-output-to-predict-standard-epidemiological-metrics",
-    "title": "Fitting models in R",
+    "title": "Modelling an oubtreak - COVID-19 in Thailand",
     "section": "Post-process the model output to predict standard epidemiological metrics",
     "text": "Post-process the model output to predict standard epidemiological metrics\nThis is great, but as we’ve seen before, the output from ode can be a bit unwieldy. Let’s write a function that can clean it up for us.\n\ntidy_base_model &lt;- function(ode_output, times, parameters) {\n    as.data.frame(ode_output) %&gt;%\n        mutate(\n            Prevalence = Exposed + Infectious,\n            Incidence = Exposed / parameters[\"latent_period\"],\n            Cumulative_incidence = cumsum(Incidence),\n            Population = Susceptible + Exposed + Infectious + Recovered,\n            Date = times\n        )\n}\n\ntidied_output &lt;- tidy_base_model(out, times, parameters)\n\nWhat is the formula for incidence?\n\nWrite down an equation for prevalence and the corresponding R code.\n\nWhy do we choose to plot incidence?",
     "crumbs": [
-      "Fitting models in R"
+      "Modelling an oubtreak - COVID-19 in Thailand"
     ]
   },
   {
     "objectID": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#plot-the-total-population-size-and-predicted-prevalence-and-incidence",
     "href": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#plot-the-total-population-size-and-predicted-prevalence-and-incidence",
-    "title": "Fitting models in R",
+    "title": "Modelling an oubtreak - COVID-19 in Thailand",
     "section": "Plot the total population size, and predicted prevalence and incidence",
     "text": "Plot the total population size, and predicted prevalence and incidence\nIt’s time to plot our solution, and make sure we haven’t made any silly mistakes.\n\nggplot() +\n    geom_line(aes(x = Date, y = Prevalence), data = tidied_output, linewidth = 1, colour = \"firebrick\") +\n    labs(x=\"Date\", y=\"Modelled Prevalence\") +\n    ggtitle(\"Thailand's First Wave, Jan-Jul 2020\") +\n    theme_bw()\n\n\n\n\n\n\n\nggplot() +\n    geom_line(aes(x = Date, y = Population), data = tidied_output, linewidth = 1, colour = \"firebrick\") +\n    ggtitle(\"Thailand's First Wave, Jan-Jul 2020\") +\n    labs(x=\"Date\", y=\"Total Population\") +\n    ggtitle(\"Thailand's First Wave, Jan-Jul 2020\") +\n    theme_bw()\n\n\n\n\n\n\n\n\nWhat is the sum of all the differential equations for the COVID-19 model?\n\nWhy do we choose to plot the population size over time?",
     "crumbs": [
-      "Fitting models in R"
+      "Modelling an oubtreak - COVID-19 in Thailand"
     ]
   },
   {
     "objectID": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#compare-the-model-with-the-data",
     "href": "session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html#compare-the-model-with-the-data",
-    "title": "Fitting models in R",
+    "title": "Modelling an oubtreak - COVID-19 in Thailand",
     "section": "Compare the model with the data",
     "text": "Compare the model with the data\n\n# Compare the solution with the data\n# Incidence\nggplot(first_wave) +\n  geom_col(aes(x=Date, y=Cases), width=1, fill=NA, colour=\"black\") +\n  geom_point(data=tidied_output, aes(x=Date, y=Incidence), size=2, colour=\"firebrick\") +\n  ylab(\"Daily cases\") +\n  xlab(\"\") +\n  ggtitle(\"Model-predicted incidence\") +\n  theme_bw()\n\n\n\n\n\n\n\n# Cumulative incidence\nggplot(first_wave) +\n  geom_line(aes(x=Date, y=Cumulative_cases), linewidth=2, colour=\"skyblue\") +\n  geom_point(data=tidied_output, aes(x=Date, y=Cumulative_incidence), size=2, colour=\"firebrick\") +\n  ylab(\"Cumulative cases\") +\n  xlab(\"\") +\n  ggtitle(\"Model-predicted cumulative incidence\") +\n  theme_bw()        \n\n\n\n\n\n\n\n\nVary the value of \\(R_0\\) and re-run the model. What value of \\(R_0\\) do you think is most realistic?\n\nPerhaps the number of people who seeded the outbreak was smaller or larger. How can you explore that using the code and would that change your estimate for \\(R_0\\)?\n\nWhat is the difference between the first and second graphs, and why should we plot these?\n\nTry changing the end times and re-running the model:\n\nstart_date = as.Date(\"2020-03-07\")\nend_date = as.Date(\"2020-04-26\")\ntimes_long = seq(start_date, end_date, by=1)\n\nlong_out &lt;- ode(y = state, times = as.numeric(times_long - times_long[1]), func = COVID.base, parms = parameters)\ntidied_long &lt;- tidy_base_model(long_out, times_long, parameters)\n\nWhy would we do this?",
     "crumbs": [
-      "Fitting models in R"
+      "Modelling an oubtreak - COVID-19 in Thailand"
     ]
   },
   {
@@ -142,81 +142,81 @@
   {
     "objectID": "session5_fitting_models_in_r/session5_fitting_models_in_r.html",
     "href": "session5_fitting_models_in_r/session5_fitting_models_in_r.html",
-    "title": "Modelling an outbreak - COVID-19 in Thailand",
+    "title": "Fitting Models in R",
     "section": "",
     "text": "Thanks to Lisa White, Nuffield Department of Medicine, Oxford University,\nMichael Meehan, and Emma McBryde, Australian Institute of Tropical Health & Medicine, James Cook University.\nAdapted and presented by Eamon Conway, The Walter and Eliza Hall Institute, Melbourne.\n\nMarch 2023",
     "crumbs": [
-      "Modelling an outbreak - COVID-19 in Thailand"
+      "Fitting Models in R"
     ]
   },
   {
     "objectID": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#questions",
     "href": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#questions",
-    "title": "Modelling an outbreak - COVID-19 in Thailand",
+    "title": "Fitting Models in R",
     "section": "Questions",
     "text": "Questions\nWhat are the residuals?\n\nWhat disadvantages might there be of fitting models by hand like this?\n\nCan you think of a simple algorithm for searching over all the parameters and finding those that give the best fitting model?\n\nIn the example we have been minimizing the sum of squares of the residuals. What would be the effect if we decided to minimize the sums of the absolute values of the residuals? Would you expect to get the same answer?",
     "crumbs": [
-      "Modelling an outbreak - COVID-19 in Thailand"
+      "Fitting Models in R"
     ]
   },
   {
     "objectID": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#filtering-the-data",
     "href": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#filtering-the-data",
-    "title": "Modelling an outbreak - COVID-19 in Thailand",
+    "title": "Fitting Models in R",
     "section": "Filtering the data",
     "text": "Filtering the data\nWhen calibrating each of these parameters, one thing we must be careful of is to account for the introduction of various interventions as these will likely have a significant impact on the parameter values (the reproduction number in particular). Therefore, in the code provided below I first isolate the “pre-intervention” era (which we defined in the last session as the first wave between 7th and 26th March 2020. We will use this truncated dataset to estimate the parameters, \\(R_0\\) and initial_infected_population. The code below should let you view the data we are using to fit the model.\n\n# Data imports and filtering\nfirst_wave &lt;- read.csv(\"first_wave_TH.csv\", colClasses = c(\"Date\", \"numeric\", \"numeric\"))\n# fixing the format of date\nfirst_wave$Date &lt;- as.Date(first_wave$Date, format = \"%Y-%m-%d\")\n# Time window\nstart_date &lt;- as.Date(\"2020-03-07\")\nend_date &lt;- as.Date(\"2020-03-26\")\n\n# Filter data to capture period prior to interventions. This has already been done in the last session.\nuncontrolled_period &lt;- first_wave %&gt;%\n    filter(Date &gt;= start_date, Date &lt;= end_date)\n\n# Plot the filtered data\nggplot(uncontrolled_period) +\n    geom_col(aes(x = Date, y = Cases), width = 1, fill = \"dodgerblue2\", colour = \"blue\") +\n    ylab(\"Daily cases\") +\n    xlab(\"\") +\n    ggtitle(\"Uncontrolled first wave of COVID-19 in Thailand 1st to 24th March, 2020\") +\n    theme_bw()\n\n\n\n\n\n\n\n\nWe’ll re-use the functions from the last session\n\n## Define model as per the previous session\n# Time window\ntimes &lt;- seq(start_date, end_date, by = 1)\n\n# Model parameters\nparameters &lt;- c(\n    R0 = 4,\n    latent_period = 5,\n    infectious_period = 6\n)\n\n# Initial conditions\nTotal_population &lt;- 6.6e7 # Population of Thailand\nInitial_exposed &lt;- 0\nInitial_infectious &lt;- 20 # Initial infectious seed\nInitial_recovered &lt;- 0\nInitial_susceptible &lt;- Total_population - Initial_exposed - Initial_infectious - Initial_recovered\n\n# State variables\nstate &lt;- c(\n    Susceptible = Initial_susceptible,\n    Exposed = Initial_exposed,\n    Infectious = Initial_infectious,\n    Recovered = Initial_recovered\n)\n\n\n# Model function\nCOVID.base &lt;- function(t, state, parameters) {\n    with(as.list(c(state, parameters)), {\n        # Calculate the total population size\n        Total_population &lt;- Susceptible + Exposed + Infectious + Recovered\n\n        # Calculate the average force of infection imposed on each susceptible individual\n        force_of_infection &lt;- R0 * Infectious / (Total_population * infectious_period)\n\n        # Calculate the net (instantaneous) change in each state variable\n        Susceptible_change &lt;- -force_of_infection * Susceptible\n        Exposed_change &lt;- force_of_infection * Susceptible - Exposed / latent_period\n        Infectious_change &lt;- Exposed / latent_period - Infectious / infectious_period\n        Recovered_change &lt;- Infectious / infectious_period\n\n        # Return net changes as list\n        return(list(\n            c(\n                Susceptible_change,\n                Exposed_change,\n                Infectious_change,\n                Recovered_change\n            )\n        ))\n    })\n}\n\nsolve.base.model &lt;- function(y_ = state,\n                             times_ = times,\n                             func. = COVID.base,\n                             parms_ = parameters) {\n    out &lt;- ode(\n        y = y_,\n        times = as.numeric(times_ - times_[1]),\n        func = func.,\n        parms = parms_\n    )\n\n    # Calculate the prevalence, incidence and cumulative incidence (for comparison with data)\n    out &lt;- as.data.frame(out) %&gt;%\n        mutate(\n            Prevalence = Exposed + Infectious,\n            Incidence = Exposed / parms_[\"latent_period\"],\n            Cumulative_incidence = cumsum(Incidence) + Incidence[1],\n            Population = Susceptible + Exposed + Infectious + Recovered,\n            Date = times_\n        )\n\n    return(out)\n}",
     "crumbs": [
-      "Modelling an outbreak - COVID-19 in Thailand"
+      "Fitting Models in R"
     ]
   },
   {
     "objectID": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#solving-the-model-for-a-specific-set-of-parameters",
     "href": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#solving-the-model-for-a-specific-set-of-parameters",
-    "title": "Modelling an outbreak - COVID-19 in Thailand",
+    "title": "Fitting Models in R",
     "section": "Solving the model for a specific set of parameters",
     "text": "Solving the model for a specific set of parameters\nNow we use the model developed in the last session and solve the model for an initial set of parameters, an initial state and using dates from 7th - 26th March, 2020\n\n# now we use the model developed in the last session and solve it\n# for an initial set of parameters, an initial state and using times\n# from just 7th - 26th  of March 2020\nout_init &lt;- solve.base.model(\n    y_ = state,\n    times_ = times,\n    func. = COVID.base,\n    parms_ = parameters\n)\n\n# Plot the filtered data and the first model \"guess\"\nggplot(uncontrolled_period) +\n    geom_col(aes(x = Date, y = Cases), width = 1, fill = \"dodgerblue2\", colour = \"blue\") +\n    geom_point(data = out_init, aes(x = Date, y = Incidence), size = 2, colour = \"firebrick2\") +\n    ylab(\"Daily cases\") +\n    xlab(\"\") +\n    ggtitle(\"Thailand's First Wave, Jan-Jul 2020\") +\n    theme_bw()",
     "crumbs": [
-      "Modelling an outbreak - COVID-19 in Thailand"
+      "Fitting Models in R"
     ]
   },
   {
     "objectID": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#calculating-distance-between-the-model-and-data",
     "href": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#calculating-distance-between-the-model-and-data",
-    "title": "Modelling an outbreak - COVID-19 in Thailand",
+    "title": "Fitting Models in R",
     "section": "Calculating “distance” between the model and data",
     "text": "Calculating “distance” between the model and data\nWe can use the model output, stored in out_init to assess model fit. We can use sum of squares of the difference between the data and the model.\n\n# find the sum of the residuals squared for day 2 until day 24\nSSQ_initial &lt;- sum((uncontrolled_period$Cases[-1] - out_init$Incidence[-1])^2)\nSSQ_initial\n\n[1] 24516.09\n\n\nIf we were to minimise SSQ_initial, given our parameters \\(R_0\\) and \\(I(t=0)\\) we can argue that we have found our parameters of interest.",
     "crumbs": [
-      "Modelling an outbreak - COVID-19 in Thailand"
+      "Fitting Models in R"
     ]
   },
   {
     "objectID": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#transforming-the-parameters",
     "href": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#transforming-the-parameters",
-    "title": "Modelling an outbreak - COVID-19 in Thailand",
+    "title": "Fitting Models in R",
     "section": "Transforming the parameters",
     "text": "Transforming the parameters\nBefore launching into a minimisation of our SSQ function across all parameter space for the values of \\(R_0\\) and \\(I(t=0)\\), it would behoove us to pause and plan our search carefully. We will use the optim() function to minimize our function, but we should be cognisant of the fact that this function searches over all conceivable values of the parameters (i.e., from \\(-\\infty\\) to \\(\\infty\\)).\nWhat are the feasible ranges of values for our two parameters: \\(R_0\\) and \\(I(t=0)\\)?\n\nWith this in mind, it would be sensible to restrict our search to only those values of parameters that are feasible. Not only should this increase the speed of the algorithm (hopefully leading to the desired answer more quickly) but may also help us avoid any computational errors that might arise which will kill our search prematurely. For this purpose, we introduce a set of transformed parameters, that is parameters that exist in the full interval \\(-\\infty\\) to \\(\\infty\\), but can be mapped back to our feasible regions for our parameters.\n\n\n\n\n\n\nTransforming variables\n\n\n\noptim() is going to pass parameter values into our function on the interval \\((-\\infty,\\infty)\\). Is there a function that will take those parameter values and put them on the interval \\([0,\\infty)\\)?\nIf \\(x \\in (-\\infty,\\infty)\\), then \\(\\exp(x) \\in [0,\\infty)\\). Therefore if we know \\(R_0\\) and \\(I(t=0)\\), we would use \\(\\log\\) to transform back into the optim() space. If we want the opposite we can use \\(\\exp\\).\n\n\n\n# transform the parameters\n# The search / optimization algorithm we employ searches over\n# the range (-Inf, Inf) for each variable. In our application\n# we are only interested in solutions in the range (0, Inf)\n# for R0 and I(0). Therefore, it\n# would be a good idea to apply a transformation to our\n# search space so that we are not wasting time exploring\n# infeasible regions of parameter space.\ninitial_transformed_parameters &lt;- log(c(\n    \"R0\" = 4,\n    \"Initial_infectious\" = 20\n))\n\nSo now we are in a position to define our function that we wish to optimise. The code is below:\n\n#### Fitting routine ####\n\n# We have selected R0 and I(0) as our free parameters\n# We need a function that accepts R0 and I(0) as arguments,\n# solves the model using these inputs, and calculates the\n# sum of squares of the data given these parameters\n\nSSQ_function &lt;- function(transformed_parameters,\n                         data = uncontrolled_period$Cases[-1],\n                         state_base = state,\n                         times_ = times,\n                         func. = COVID.base,\n                         parms_base = parameters) {\n\n    # Untransform parameters\n    R0 &lt;- exp(transformed_parameters[\"R0\"])\n    Initial_infectious &lt;- exp(transformed_parameters[\"Initial_infectious\"])\n\n    # Calculate updated susceptible population\n    Initial_susceptible &lt;- state_base[\"Susceptible\"] + state_base[\"Infectious\"] - Initial_infectious\n\n    # Overwrite baseline parameters with proposed parameters\n    parms_base[\"R0\"] &lt;- R0\n    state_base[\"Susceptible\"] &lt;- Initial_susceptible\n    state_base[\"Infectious\"] &lt;- Initial_infectious\n\n    # Solve model with updated parameters\n    out &lt;- solve.base.model(\n        state_base,\n        times_,\n        func.,\n        parms_base\n    )\n    return(\n        sum((uncontrolled_period$Cases[-1] - out$Incidence[-1])^2)\n    )\n}\n\nWe can check it works as intended:\n\nSSQ_initial_from_function &lt;- SSQ_function(initial_transformed_parameters)\nSSQ_initial_from_function\n\n[1] 24516.09\n\nSSQ_initial\n\n[1] 24516.09\n\n\nYay, we are getting the same result.\nWith our SSQ_function now set up, we can use the optim function to determine the optimal parameters, that is the parameter values that minimize the sum of squares.\nWe will use the Nelder-Mead search algorithm. This is a search algorithm that allows rapid exploration of the parameter space for the optimal parameters.\n\n#### Optimal parameters ####\n\n# Use the optim function to determine the parameters that\n# minimize the negative log-likelihood (i.e., maximize\n# the likelihood)\n# We will use the Nelder-Mead optimization solver\noptim_NM &lt;- optim(\n    par = initial_transformed_parameters,\n    fn = SSQ_function,\n    control = list(maxit = 500),\n    method = \"Nelder-Mead\",\n    hessian = TRUE\n)\n\nOnce the search is complete, inspect the solution:\n\n# Check for convergence (always code 0 for NM)\noptim_NM$convergence # 0 - converged; 1 - failed to converge\n\n[1] 0\n\n# Inspect solution\noptim_NM$par\n\n                R0 Initial_infectious \n          1.094083           4.302341 \n\n\nWhat are the initial values of the two fitted parameters?\n\nThe results are a little surprising. However, remember that our search was conducted with reference to the transformed parameters; in order to retrieve the true optimal parameter values we must invert the transformation:\n\n# Back-transform parameters\noptimum_parameters &lt;- exp(optim_NM$par)\noptimum_parameters\n\n                R0 Initial_infectious \n          2.986444          73.872554 \n\n\nBut have we improved our SSQ from the initial guess we had?\n\n# Inspect the optimal sum of squared residuals\noptimum_SSQ &lt;- optim_NM$value\noptimum_SSQ\n\n[1] 15100\n\n\nHow does the SSQ score at the optimal value compare with our initial SSQ score (SSQ_initial)?\n\nSatisfied that we have found the optimal solution, let’s now solve the model using these parameter values and compare the solution with our observed data:\n\n#### Optimal model solution ####\n\n# Create the optimal parameter and state vectors\noptimal_parameters &lt;- parameters\noptimal_parameters[\"R0\"] &lt;- optimum_parameters[\"R0\"]\n\noptimal_initial_state &lt;- state\noptimal_initial_state[\"Susceptible\"] &lt;- state[\"Susceptible\"] + state[\"Infectious\"] - optimum_parameters[\"Initial_infectious\"]\noptimal_initial_state[\"Infectious\"] &lt;- optimum_parameters[\"Initial_infectious\"]\n\n# Solve the model given the optimal parameters and initial conditions\noptimal_solution &lt;- solve.base.model(\n    y_ = optimal_initial_state,\n    times_ = times,\n    func. = COVID.base,\n    parms = optimal_parameters\n)\n\n\n# Plot the optimal solution\nggplot(first_wave) +\n    geom_col(aes(x = Date, y = Cases), width = 1, fill = \"dodgerblue2\", colour = \"blue\") +\n    geom_point(data = optimal_solution, aes(x = Date, y = Incidence), size = 2, colour = \"firebrick2\") +\n    ylab(\"Daily cases\") +\n    xlab(\"\") +\n    ggtitle(\"Fit to unmitigated period\") +\n    theme_bw()\n\n\n\n\n\n\n\n\nHow does this fit compare to the observed data?",
     "crumbs": [
-      "Modelling an outbreak - COVID-19 in Thailand"
+      "Fitting Models in R"
     ]
   },
   {
     "objectID": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#covid-19-likelihood-function",
     "href": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#covid-19-likelihood-function",
-    "title": "Modelling an outbreak - COVID-19 in Thailand",
+    "title": "Fitting Models in R",
     "section": "Covid-19 Likelihood function",
     "text": "Covid-19 Likelihood function\nLet us calculate the likelihood of our observed data given our COVID model (which of course is specific to the current parameter values that we have used). To do this, a common practice is to assume that the observed daily incidence (stored in the dataframe uncontrolled_period) is a Poisson-distributed random variable with mean given by our model-predicted incidence (stored in the dataframe out_init). Under this model the (log-)likelihood of each daily observation can be calculated using the dpois() function; and the total (log-)likelihood for all of the observations is simply the sum of all these: \\[\n\\log p(\\text{Cases}|\\vec{\\theta}) = \\sum_{i=1}^N \\log \\text{Poisson}(c_i|\\mu = \\text{Model}(\\theta,i)),\n\\] where Cases is the vector containing our case data, \\(c_i\\) is the number of cases on the \\(i\\)th day, Model\\((\\theta,i)\\) is the model output given our parameters on day \\(i\\), and \\(\\mu\\) is the mean of the Poisson distribution.\n\nThere are many possible distributions that can be used to develop the likelihood. You may wish to investigate some of the density distributions available in R, which you can do by typing ?distributions in your console.\nAnother distribution, which allows us to account for high variability in the data is the negative binomial distribution. We could use the output from our last function call to calculate the likelihood of our observed data given our COVID model using dnbinom() function in much the same way as the Poisson distribution. Those with a particular interest in statistics and probability distributions may wish to experiment and to consider the pros and cons of different choices. For the remainder of this exercise, however, we will continue with the Poisson distribution which has the attribute of having only one parameter to estimate, the mean.\n\n\n\n\n\n\nChanging distributions\n\n\n\nThe decision on what distribution to use within your likelihood function is a Model Choice. Sometimes, multiple distributions may suit your need. Be aware that each distribution has different assumptions.",
     "crumbs": [
-      "Modelling an outbreak - COVID-19 in Thailand"
+      "Fitting Models in R"
     ]
   },
   {
     "objectID": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#bonus-code",
     "href": "session5_fitting_models_in_r/session5_fitting_models_in_r.html#bonus-code",
-    "title": "Modelling an outbreak - COVID-19 in Thailand",
+    "title": "Fitting Models in R",
     "section": "Bonus code",
     "text": "Bonus code\nCopy and paste this code to perform a grid search - getting the negative log likelihood across a sequence of each parameter value.\n\n# Specify search grid\nR0_vec &lt;- seq(from = 0.1, to = 10, by = 0.1)\ninitial_infectious_vec &lt;- seq(from = 1, to = 50, by = 1)\n\n# the function that will perform grid search\n\nnll.grid &lt;- function(R0_vec, initial_infectious_vec) {\n    parameter_grid &lt;- expand.grid(\n        R0 = R0_vec,\n        initial_infectious = initial_infectious_vec\n    )\n    nll &lt;- data.frame(matrix(nrow = nrow(parameter_grid), ncol = 1))\n    colnames(nll) &lt;- \"NLL\"\n    for (row_of_params in seq(1, dim(parameter_grid)[1])) {\n        transformed_params &lt;- log(c(\n            \"R0\" = parameter_grid[row_of_params, 1],\n            \"Initial_infectious\" = parameter_grid[row_of_params, 2]\n        ))\n        nll[row_of_params, ] &lt;- negative_log_likelihood(transformed_params)\n    }\n    return(data.frame(\n        Reproduction_number = parameter_grid[\"R0\"],\n        Initial_infectious = parameter_grid[\"initial_infectious\"],\n        nll\n    ))\n}\n\n# call the function that will calculate likelihood surface\nnll_grid_results &lt;- nll.grid(R0_vec, initial_infectious_vec)\n\n\n# Plot likelihood surface\nnll_plot &lt;- nll_grid_results %&gt;%\n    ggplot2::ggplot(aes(\n        x = R0,\n        y = initial_infectious,\n        fill = NLL,\n        z = NLL\n    )) +\n    geom_tile() +\n    geom_contour(breaks = c(100, 110, 120, 130, 200, 500, 1000, 4000)) +\n    ylab(\"I(0)\") +\n    xlab(\"R0\") +\n    ggtitle(\"Likelihood surface\") +\n    theme_bw()\n\n# Extract optimum from grid search\ngrid_optimum &lt;- nll_grid_results[which.min(nll_grid_results$NLL), ]\ngrid_optimum\n\n     R0 initial_infectious      NLL\n2940  4                 30 144.9431\n\n# Superimpose optimum on likelihood surface plot\nnll_plot &lt;- nll_plot +\n    geom_point(aes(\n        x = grid_optimum$R0,\n        y = grid_optimum$initial_infectious\n    ),\n    colour = \"red\",\n    )\n# Superimpose optimal point to negative-log-likelihood plot\nnll_plot &lt;- nll_plot + geom_point(aes(\n    x = optimum_parameters[\"R0\"],\n    y = optimum_parameters[\"Initial_infectious\"]\n),\ncolour = \"yellow\",\nsize = 1\n)\n\nprint(nll_plot)\n\n\n\n\n\n\n\n\nWhy might a grid search not be the best option for finding optimum parameter values ?",
     "crumbs": [
-      "Modelling an outbreak - COVID-19 in Thailand"
+      "Fitting Models in R"
     ]
   },
   {

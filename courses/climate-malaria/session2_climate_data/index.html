@@ -173,7 +173,7 @@ window.Quarto = {
  <span class="dropdown-text">Session 1: Climate science primer</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../session2_climate_data/session2_climate_data.html">
+    <a class="dropdown-item" href="../session2_climate_data/index.html">
  <span class="dropdown-text">Session 2: Obtaining, manipulating &amp; fitting climate data</span></a>
   </li>  
         <li>
@@ -869,7 +869,7 @@ Tip
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">deframe</span>()</span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(counts_prov_month <span class="sc">|&gt;</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>counts_prov_month <span class="sc">|&gt;</span></span>
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(province_en <span class="sc">%in%</span> selected_provinces) <span class="sc">|&gt;</span></span>
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(month, Count)) <span class="sc">+</span></span>
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
@@ -877,7 +877,7 @@ Tip
 <span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>             <span class="at">labeller =</span> <span class="fu">labeller</span>(<span class="at">province_en =</span> prov_lab)) <span class="sc">+</span></span>
 <span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"date"</span>, <span class="at">y =</span> <span class="st">"monthly count"</span>) <span class="sc">+</span></span>
 <span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">20</span>, <span class="at">hjust =</span> <span class="dv">1</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">20</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -2720,11 +2720,11 @@ Even a perfect climate-to-cases relationship captures just one component of mala
 <span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"immunity duration 1/omega = %.2f months</span><span class="sc">\n</span><span class="st">"</span>, <span class="dv">1</span><span class="sc">/</span>p<span class="sc">$</span>omega))</span>
 <span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"climate sensitivity b_temp = %+.3f  b_rain = %+.3f</span><span class="sc">\n</span><span class="st">"</span>, p<span class="sc">$</span>b_temp, p<span class="sc">$</span>b_rain))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>convergence code=1  nll=-52556.6
-incubation period 1/sigma = 0.45 months
-infectious period 1/gamma = 0.24 months
-immunity duration 1/omega = 9.79 months
-climate sensitivity b_temp = +0.189  b_rain = +0.015</code></pre>
+<pre><code>convergence code=0  nll=-52545.6
+incubation period 1/sigma = 0.55 months
+infectious period 1/gamma = 0.40 months
+immunity duration 1/omega = 10.59 months
+climate sensitivity b_temp = +0.198  b_rain = +0.163</code></pre>
 </div>
 </div>
 <p><strong>Step 7: diagnostics.</strong> A snapshot of the fitted per-province parameters, with the observed (reported) and model-fitted total cases side by side, sorted by observed caseload. <code>R0_baseline</code> is the baseline reproduction number <span class="math inline">\(\beta_{0}/\gamma\)</span> (transmission rate over recovery rate, at full susceptibility).</p>
@@ -2771,121 +2771,121 @@ climate sensitivity b_temp = +0.189  b_rain = +0.015</code></pre>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Tak</td>
-<td style="text-align: right;">13.314</td>
-<td style="text-align: right;">3.24</td>
-<td style="text-align: right;">6722.0</td>
+<td style="text-align: right;">12.735</td>
+<td style="text-align: right;">5.07</td>
+<td style="text-align: right;">6151.8</td>
 <td style="text-align: right;">5497</td>
-<td style="text-align: right;">5469</td>
+<td style="text-align: right;">5500</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Kanchanaburi</td>
-<td style="text-align: right;">12.574</td>
-<td style="text-align: right;">3.06</td>
-<td style="text-align: right;">2475.8</td>
+<td style="text-align: right;">11.519</td>
+<td style="text-align: right;">4.58</td>
+<td style="text-align: right;">2336.5</td>
 <td style="text-align: right;">2154</td>
-<td style="text-align: right;">2154</td>
+<td style="text-align: right;">2156</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Prachuap Khiri Khan</td>
-<td style="text-align: right;">11.858</td>
-<td style="text-align: right;">2.88</td>
-<td style="text-align: right;">1552.4</td>
+<td style="text-align: right;">10.424</td>
+<td style="text-align: right;">4.15</td>
+<td style="text-align: right;">1507.4</td>
 <td style="text-align: right;">1407</td>
-<td style="text-align: right;">1400</td>
+<td style="text-align: right;">1407</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Mae Hong Son</td>
-<td style="text-align: right;">13.700</td>
-<td style="text-align: right;">3.33</td>
-<td style="text-align: right;">1408.8</td>
+<td style="text-align: right;">13.205</td>
+<td style="text-align: right;">5.25</td>
+<td style="text-align: right;">1269.3</td>
 <td style="text-align: right;">1103</td>
-<td style="text-align: right;">1119</td>
+<td style="text-align: right;">1103</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Ratchaburi</td>
-<td style="text-align: right;">11.824</td>
-<td style="text-align: right;">2.88</td>
-<td style="text-align: right;">770.7</td>
+<td style="text-align: right;">10.647</td>
+<td style="text-align: right;">4.24</td>
+<td style="text-align: right;">737.7</td>
 <td style="text-align: right;">667</td>
-<td style="text-align: right;">657</td>
+<td style="text-align: right;">667</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Chumphon</td>
-<td style="text-align: right;">11.674</td>
-<td style="text-align: right;">2.84</td>
-<td style="text-align: right;">607.5</td>
+<td style="text-align: right;">9.958</td>
+<td style="text-align: right;">3.96</td>
+<td style="text-align: right;">580.2</td>
 <td style="text-align: right;">558</td>
 <td style="text-align: right;">557</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Ranong</td>
-<td style="text-align: right;">12.318</td>
-<td style="text-align: right;">3.00</td>
-<td style="text-align: right;">496.1</td>
+<td style="text-align: right;">10.944</td>
+<td style="text-align: right;">4.35</td>
+<td style="text-align: right;">471.1</td>
 <td style="text-align: right;">495</td>
-<td style="text-align: right;">503</td>
+<td style="text-align: right;">494</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Rayong</td>
-<td style="text-align: right;">23.954</td>
-<td style="text-align: right;">5.83</td>
-<td style="text-align: right;">311.7</td>
+<td style="text-align: right;">30.000</td>
+<td style="text-align: right;">11.94</td>
+<td style="text-align: right;">319.2</td>
 <td style="text-align: right;">388</td>
-<td style="text-align: right;">379</td>
+<td style="text-align: right;">386</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Chiang Mai</td>
-<td style="text-align: right;">13.577</td>
-<td style="text-align: right;">3.30</td>
-<td style="text-align: right;">155.9</td>
+<td style="text-align: right;">11.917</td>
+<td style="text-align: right;">4.74</td>
+<td style="text-align: right;">141.2</td>
 <td style="text-align: right;">124</td>
-<td style="text-align: right;">126</td>
+<td style="text-align: right;">123</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Uthai Thani</td>
-<td style="text-align: right;">12.571</td>
-<td style="text-align: right;">3.06</td>
-<td style="text-align: right;">139.7</td>
+<td style="text-align: right;">12.931</td>
+<td style="text-align: right;">5.14</td>
+<td style="text-align: right;">118.5</td>
 <td style="text-align: right;">116</td>
-<td style="text-align: right;">118</td>
+<td style="text-align: right;">115</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Phangnga</td>
-<td style="text-align: right;">10.963</td>
-<td style="text-align: right;">2.67</td>
-<td style="text-align: right;">98.4</td>
+<td style="text-align: right;">9.184</td>
+<td style="text-align: right;">3.65</td>
+<td style="text-align: right;">99.7</td>
 <td style="text-align: right;">93</td>
-<td style="text-align: right;">90</td>
+<td style="text-align: right;">96</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Surat Thani</td>
-<td style="text-align: right;">7.915</td>
-<td style="text-align: right;">1.93</td>
-<td style="text-align: right;">110.2</td>
+<td style="text-align: right;">6.400</td>
+<td style="text-align: right;">2.55</td>
+<td style="text-align: right;">105.0</td>
 <td style="text-align: right;">80</td>
-<td style="text-align: right;">70</td>
+<td style="text-align: right;">81</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Bangkok</td>
-<td style="text-align: right;">7.955</td>
-<td style="text-align: right;">1.94</td>
-<td style="text-align: right;">94.3</td>
+<td style="text-align: right;">8.998</td>
+<td style="text-align: right;">3.58</td>
+<td style="text-align: right;">83.7</td>
 <td style="text-align: right;">76</td>
-<td style="text-align: right;">73</td>
+<td style="text-align: right;">77</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Yala</td>
-<td style="text-align: right;">7.953</td>
-<td style="text-align: right;">1.93</td>
-<td style="text-align: right;">69.9</td>
+<td style="text-align: right;">7.417</td>
+<td style="text-align: right;">2.95</td>
+<td style="text-align: right;">50.5</td>
 <td style="text-align: right;">44</td>
-<td style="text-align: right;">43</td>
+<td style="text-align: right;">42</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Kamphaeng Phet</td>
-<td style="text-align: right;">11.038</td>
-<td style="text-align: right;">2.69</td>
-<td style="text-align: right;">30.8</td>
+<td style="text-align: right;">10.745</td>
+<td style="text-align: right;">4.27</td>
+<td style="text-align: right;">28.4</td>
 <td style="text-align: right;">27</td>
 <td style="text-align: right;">26</td>
 </tr>
@@ -2920,7 +2920,7 @@ climate sensitivity b_temp = +0.189  b_rain = +0.015</code></pre>
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>pseudo-R2 (vs fitted lambda): 0.937</code></pre>
+<pre><code>pseudo-R2 (vs fitted lambda): 0.942</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">

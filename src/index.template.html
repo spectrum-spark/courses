@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Practical training courses from SPARK, covering infectious disease modelling, climate, data and research methods."
+    >
+    <title>SPARK Training</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="assets/site.css">
+    <script src="assets/catalogue.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#courses">Skip to courses</a>
+
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="SPARK Training home">
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <path d="M20 2l2.7 11.3L32 6.4l-5.4 10.1L38 14l-10.2 5.9L38 26l-11.4-2.5L32 33.6l-9.3-6.9L20 38l-2.7-11.3L8 33.6l5.4-10.1L2 26l10.2-6.1L2 14l11.4 2.5L8 6.4l9.3 6.9L20 2z"/>
+        </svg>
+        <span>SPARKLE <strong>Training</strong></span>
+      </a>
+      <a class="header-link" href="#courses">Browse courses</a>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Skills for real-world impact</p>
+          <h1 id="hero-title">Training in disease modelling for all skilll levels.</h1>
+          <p class="hero-intro">
+            Practical, research-led training in infectious disease modelling,
+            data and decision science.
+          </p>
+          <a class="primary-action" href="#courses">
+            Explore {{COURSE_COUNT}} courses <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <svg viewBox="0 0 620 520" role="presentation">
+            <defs>
+              <linearGradient id="orb" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#a9dc88"/>
+                <stop offset="1" stop-color="#e6f3c9"/>
+              </linearGradient>
+            </defs>
+            <circle cx="315" cy="252" r="188" fill="url(#orb)"/>
+            <path d="M128 283c52-92 130-140 235-145 46-2 91 6 134 25" fill="none" stroke="#0e6658" stroke-width="3"/>
+            <path d="M138 337c73-57 155-82 246-74 47 4 88 18 124 42" fill="none" stroke="#0e6658" stroke-width="2" stroke-dasharray="8 12"/>
+            <g fill="#0e6658">
+              <circle cx="128" cy="283" r="8"/><circle cx="226" cy="189" r="8"/>
+              <circle cx="363" cy="138" r="8"/><circle cx="497" cy="163" r="8"/>
+              <circle cx="138" cy="337" r="7"/><circle cx="272" cy="273" r="7"/>
+              <circle cx="384" cy="263" r="7"/><circle cx="508" cy="305" r="7"/>
+            </g>
+            <g fill="#fff">
+              <circle cx="317" cy="252" r="78"/>
+              <circle cx="317" cy="252" r="50" fill="#f3a737"/>
+            </g>
+            <path d="M317 184l9 38 31-23-18 34 39-8-35 20 35 20-39-8 18 34-31-23-9 38-9-38-31 23 18-34-39 8 35-20-35-20 39 8-18-34 31 23 9-38z" fill="#163d38"/>
+          </svg>
+        </div>
+      </section>
+
+      <section class="catalogue" id="courses" aria-labelledby="courses-heading">
+        <div class="catalogue-heading">
+          <div>
+            <p class="eyebrow">Course catalogue</p>
+            <h2 id="courses-heading">Start learning</h2>
+          </div>
+          <label class="search">
+            <span class="visually-hidden">Search courses</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="m16 16 4 4"></path>
+            </svg>
+            <input id="course-search" type="search" placeholder="Search courses…" autocomplete="off">
+          </label>
+        </div>
+
+        <p class="results-summary" aria-live="polite">
+          Showing <strong id="visible-count">{{COURSE_COUNT}}</strong>
+          <span id="course-noun">courses</span>
+        </p>
+
+        <div class="course-grid">
+<!-- COURSE_CARDS -->
+        </div>
+
+        <div class="empty-state" id="empty-state" hidden>
+          <h2>No courses found</h2>
+          <p>Try a different word or clear your search.</p>
+          <button type="button" id="clear-search">Clear search</button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p><strong>SPARK Training</strong></p>
+      <p>Research-led learning for better public health decisions.</p>
+    </footer>
+  </body>
+</html>

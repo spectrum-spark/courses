@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "climate-malaria",
+    "title": "Climate data in infectious disease modelling",
+    "description": "Explore the Climate data in infectious disease modelling course materials, activities and resources.",
+    "href": "courses/climate-malaria/",
+    "image": "courses/climate-malaria/logo.png",
+    "topics": []
+  },
+  {
+    "slug": "intro-mathematical-modelling",
+    "title": "Introduction to Mathematical Modelling – Modelling Infectious Diseases",
+    "description": "Explore the Introduction to Mathematical Modelling – Modelling Infectious Diseases course materials, activities and resources.",
+    "href": "courses/intro-mathematical-modelling/",
+    "image": "",
+    "topics": []
+  },
+  {
+    "slug": "modelling-heterogeneities",
+    "title": "SPARKLE Training Course – Modelling Infectious Diseases",
+    "description": "Explore the SPARKLE Training Course – Modelling Infectious Diseases course materials, activities and resources.",
+    "href": "courses/modelling-heterogeneities/",
+    "image": "courses/modelling-heterogeneities/logo.png",
+    "topics": []
+  }
+]
